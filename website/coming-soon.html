@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon - Data Trend Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1890ff;
+            --success: #52c41a;
+            --purple: #722ed1;
+            --text: #333;
+            --text-light: #666;
+            --bg: #f5f5f5;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            text-align: center;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: var(--text);
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--purple);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            color: var(--text-light);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .feature {
+            background: #f0f5ff;
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .notify-form {
+            display: flex;
+            gap: 10px;
+            max-width: 400px;
+            margin: 0 auto 30px;
+        }
+
+        .notify-form input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .notify-form button {
+            padding: 12px 24px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .notify-form button:hover {
+            background: #389e0d;
+        }
+
+        .success-msg {
+            color: var(--success);
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .footer {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Language selector */
+        .lang-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .lang-selector select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        [dir="rtl"] .lang-selector {
+            right: auto;
+            left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 百度统计代码（国内） -->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?f187ca1f8d8b071ab7d931785f86b888";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    <!-- Google Analytics（国外） -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S6LPBDDNNM"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-S6LPBDDNNM');
+    </script>
+    <div class="lang-selector">
+        <select id="langSelect" onchange="changeLang(this.value)">
+            <option value="zh">中文</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+            <option value="pt">Português</option>
+            <option value="es">Español</option>
+            <option value="ar">العربية</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <div class="logo">📊</div>
+        <h1 id="title">即将上线</h1>
+        <span class="badge" id="badge">数据趋势分析平台</span>
+        <p class="description" id="description">
+            强大的网页表格数据提取工具，支持一键生成趋势图表，自动监控数据变化，数据永不丢失。
+        </p>
+        <div class="features">
+            <span class="feature" id="f1">📈 趋势图表</span>
+            <span class="feature" id="f2">⚙️ 自动监控</span>
+            <span class="feature" id="f3">💾 历史数据</span>
+            <span class="feature" id="f4">📤 导出功能</span>
+        </div>
+        <p class="success-msg" id="successMsg">✅ 已收到您的通知，我们会第一时间通知您！</p>
+        <form class="notify-form" onsubmit="submitNotify(event)">
+            <input type="email" id="emailInput" placeholder="输入邮箱获取最新消息" required>
+            <button type="submit" id="notifyBtn">通知我</button>
+        </form>
+        <div class="footer">
+            <p id="footer">&copy; 2026 Data Trend Analyzer. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            zh: {
+                title: '即将上线',
+                badge: '数据趋势分析平台',
+                description: '强大的网页表格数据提取工具，支持一键生成趋势图表，自动监控数据变化，数据永不丢失。',
+                f1: '📈 趋势图表', f2: '⚙️ 自动监控', f3: '💾 历史数据', f4: '📤 导出功能',
+                placeholder: '输入邮箱获取最新消息',
+                notifyBtn: '通知我',
+                success: '✅ 已收到您的通知，我们会第一时间通知您！',
+                footer: '© 2026 Data Trend Analyzer. 保留所有权利。'
+            },
+            en: {
+                title: 'Coming Soon',
+                badge: 'Data Trend Analysis Platform',
+                description: 'Powerful web table extraction tool with instant trend charts, automatic data monitoring, and never losing historical data.',
+                f1: '📈 Trend Charts', f2: '⚙️ Auto Monitor', f3: '💾 History', f4: '📤 Export',
+                placeholder: 'Enter email for updates',
+                notifyBtn: 'Notify Me',
+                success: '✅ Thank you! We will notify you when ready.',
+                footer: '© 2026 Data Trend Analyzer. All rights reserved.'
+            },
+            ja: {
+                title: '近日公開',
+                badge: 'データ分析プラットフォーム',
+                description: '強力なWebテーブル抽出ツール。ワンクリックでトレンドチャート生成、自動データ監視、履歴データ消失なし。',
+                f1: '📈 トレンド', f2: '⚙️ 自動監視', f3: '💾 履歴', f4: '📤 エクスポート',
+                placeholder: 'メールアドレス',
+                notifyBtn: '通知',
+                success: '✅ 登録完了！発売時に通知します。',
+                footer: '© 2026 Data Trend Analyzer. All rights reserved.'
+            },
+            ko: {
+                title: '출시 예정',
+                badge: '데이터 추세 분석 플랫폼',
+                description: '강력한 웹 테이블 추출 도구. 원 클릭으로 추세 차트 생성, 자동 데이터 모니터링, 데이터 영구 보관.',
+                f1: '📈 추세 차트', f2: '⚙️ 자동 모니터링', f3: '💾 히스토리', f4: '📤 내보내기',
+                placeholder: '이메일 주소',
+                notifyBtn: '알림 받기',
+                success: '✅ 등록 완료! 출시 시 알려드리겠습니다.',
+                footer: '© 2026 Data Trend Analyzer. All rights reserved.'
+            },
+            de: {
+                title: 'Demnächst',
+                badge: 'Datenanalyse-Plattform',
+                description: 'Leistungsstarkes Web-Tabellen-Extraktionswerkzeug mit Trend-Diagrammen, automatischer Überwachung und Datenspeicherung.',
+                f1: '📈 Trend-Diagramme', f2: '⚙️ Auto-Monitor', f3: '💾 Verlauf', f4: '📤 Export',
+                placeholder: 'E-Mail eingeben',
+                notifyBtn: 'Benachrichtigen',
+                success: '✅ Danke! Wir benachrichtigen Sie.',
+                footer: '© 2026 Data Trend Analyzer. All rights reserved.'
+            },
+            fr: {
+                title: 'Bientôt disponible',
+                badge: 'Plateforme d\'analyse de données',
+                description: 'Outil puissant d\'extraction de tables web avec graphiques de tendances, surveillance automatique et historique.',
+                f1: '📈 Graphiques', f2: '⚙️ Auto-surveillance', f3: '💾 Historique', f4: '📤 Export',
+                placeholder: 'Entrez votre email',
+                notifyBtn: 'Me notifier',
+                success: '✅ Merci! Nous vous contacterons.',
+                footer: '© 2026 Data Trend Analyzer. All rights reserved.'
+            },
+            pt: {
+                title: 'Em breve',
+                badge: 'Plataforma de análise de dados',
+                description: 'Ferramenta poderosa de extração de tabelas web com gráficos de tendências, monitoramento automático e histórico.',
+                f1: '📈 Gráficos', f2: '⚙️ Auto-monitor', f3: '💾 Histórico', f4: '📤 Exportar',
+                placeholder: 'Seu email',
+                notifyBtn: 'Notificar',
+                success: '✅ Obrigado! Notificaremos quando pronto.',
+                footer: '© 2026 Data Trend Analyzer. All rights reserved.'
+            },
+            es: {
+                title: 'Próximamente',
+                badge: 'Plataforma de análisis de datos',
+                description: 'Herramienta poderosa de extracción de tablas web con gráficos de tendencias, monitoreo automático e historial.',
+                f1: '📈 Gráficos', f2: '⚙️ Auto-monitor', f3: '💾 Historial', f4: '📤 Exportar',
+                placeholder: 'Tu email',
+                notifyBtn: 'Notificarme',
+                success: '✅ ¡Gracias! Te notificaremos.',
+                footer: '© 2026 Data Trend Analyzer. All rights reserved.'
+            },
+            ar: {
+                title: 'قريباً',
+                badge: 'منصة تحليل البيانات',
+                description: 'أداة قوية لاستخراج جداول الويب مع رسوم بيانية للاتجاهات ومراقبة تلقائية وتخزين البيانات.',
+                f1: '📈 رسوم بيانية', f2: '⚙️ مراقبة تلقائية', f3: '💾 السجل', f4: '📤 تصدير',
+                placeholder: 'بريدك الإلكتروني',
+                notifyBtn: 'أخبرني',
+                success: '✅ شكراً لك! سنخطك عند الإطلاق.',
+                footer: '© 2026 Data Trend Analyzer. جميع الحقوق محفوظة.',
+                dir: 'rtl'
+            }
+        };
+
+        // Get URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        let lang = urlParams.get('lang') || 'zh';
+
+        // Set RTL for Arabic
+        if (lang === 'ar') {
+            document.documentElement.dir = 'rtl';
+        }
+
+        // Set lang select value
+        document.getElementById('langSelect').value = lang;
+
+        function changeLang(newLang) {
+            window.location.href = window.location.pathname + '?lang=' + newLang;
+        }
+
+        function updateContent() {
+            const t = translations[lang];
+            if (!t) return;
+
+            document.getElementById('title').textContent = t.title;
+            document.getElementById('badge').textContent = t.badge;
+            document.getElementById('description').textContent = t.description;
+            document.getElementById('f1').textContent = t.f1;
+            document.getElementById('f2').textContent = t.f2;
+            document.getElementById('f3').textContent = t.f3;
+            document.getElementById('f4').textContent = t.f4;
+            document.getElementById('emailInput').placeholder = t.placeholder;
+            document.getElementById('notifyBtn').textContent = t.notifyBtn;
+            document.getElementById('successMsg').textContent = t.success;
+            document.getElementById('footer').textContent = t.footer;
+
+            if (t.dir) {
+                document.documentElement.dir = t.dir;
+            }
+        }
+
+        function submitNotify(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+
+            // Show success message
+            document.getElementById('successMsg').style.display = 'block';
+            document.getElementById('emailInput').value = '';
+            console.log('Notify request:', { email, lang, type: urlParams.get('type'), page: window.location.href });
+
+            // 测试模式 - 控制台打印统计事件
+            console.log('[统计测试] 邮箱订阅:', { event: 'subscribe', lang: lang, type: urlParams.get('type') || 'default' });
+
+            // 百度统计 - 邮箱订阅
+            if (typeof _hmt !== 'undefined') {
+                _hmt.push(['_trackEvent', 'subscribe', 'email', lang + '_' + (urlParams.get('type') || 'default')]);
+            }
+            // GA统计 - 邮箱订阅
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'subscribe', {
+                    'event_category': 'engagement',
+                    'event_label': lang + '_' + (urlParams.get('type') || 'default')
+                });
+            }
+        }
+
+        // 页面加载事件
+        window.addEventListener('load', function() {
+            // 测试模式 - 控制台打印
+            console.log('[统计测试] 页面访问:', { event: 'pageview', lang: lang, type: urlParams.get('type') || 'default' });
+
+            // 百度统计
+            if (typeof _hmt !== 'undefined') {
+                _hmt.push(['_trackEvent', 'pageview', 'coming-soon', lang + '_' + (urlParams.get('type') || 'default')]);
+            }
+            // GA统计
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'page_view', {
+                    'page_title': 'Coming Soon',
+                    'page_location': window.location.href
+                });
+            }
+        });
+
+        // Initialize
+        updateContent();
+    </script>
+</body>
+</html>
